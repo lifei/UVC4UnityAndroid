@@ -18,48 +18,48 @@ using UnityEngine.Android;
 namespace Serenegiant
 {
 
-	public class AndroidUtils : MonoBehaviour
-	{
-		public const string FQCN_UNITY_PLAYER = "com.unity3d.player.UnityPlayer";
-		public const string PERMISSION_CAMERA = "android.permission.CAMERA";
+    public class AndroidUtils : MonoBehaviour
+    {
+        public const string FQCN_UNITY_PLAYER = "com.unity3d.player.UnityPlayer";
+        public const string PERMISSION_CAMERA = "android.permission.CAMERA";
 
-		public enum PermissionGrantResult
-		{
-			PERMISSION_GRANT = 0,
-			PERMISSION_DENY = -1,
-			PERMISSION_DENY_AND_NEVER_ASK_AGAIN = -2
-		}
+        public enum PermissionGrantResult
+        {
+            PERMISSION_GRANT = 0,
+            PERMISSION_DENY = -1,
+            PERMISSION_DENY_AND_NEVER_ASK_AGAIN = -2
+        }
 
-		private const string TAG = "AndroidUtils#";
-		private const string FQCN_PLUGIN = "com.serenegiant.androidutils.AndroidUtils";
+        private const string TAG = "AndroidUtils#";
+        private const string FQCN_PLUGIN = "com.serenegiant.androidutils.AndroidUtils";
 
-		//--------------------------------------------------------------------------------
-		/**
+        //--------------------------------------------------------------------------------
+        /**
 		 * ライフサイクルイベント用のデリゲーター
 		 * @param resumed true: onResume, false: onPause
 		 */
-		public delegate void LifecycleEventHandler(bool resumed);
+        public delegate void LifecycleEventHandler(bool resumed);
 
-		/***
+        /***
 		 * GrantPermissionでパーミッションを要求したときのコールバック用delegateer
 		 * @param permission
 		 * @param grantResult 0:grant, -1:deny, -2:denyAndNeverAskAgain
 		*/
-		public delegate void OnPermission(string permission, PermissionGrantResult result);
+        public delegate void OnPermission(string permission, PermissionGrantResult result);
 
-		//--------------------------------------------------------------------------------
-		/**
+        //--------------------------------------------------------------------------------
+        /**
 		 * パーミッション要求時のタイムアウト
 		 */
-		public static float PermissionTimeoutSecs = 30;
-	
-		public event LifecycleEventHandler LifecycleEvent;
+        public static float PermissionTimeoutSecs = 30;
 
-		public static bool isPermissionRequesting;
-		private static PermissionGrantResult grantResult;
+        public event LifecycleEventHandler LifecycleEvent;
 
-		void Awake()
-		{
+        public static bool isPermissionRequesting;
+        private static PermissionGrantResult grantResult;
+
+        void Awake()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}Awake:");
 #endif
@@ -67,90 +67,90 @@ namespace Serenegiant
 			Input.backButtonLeavesApp = true;   // 端末のバックキーでアプリを終了できるようにする
 			Initialize();
 #endif
-		}
+        }
 
-		//--------------------------------------------------------------------------------
-		// Java側からのイベントコールバック
+        //--------------------------------------------------------------------------------
+        // Java側からのイベントコールバック
 
-		/**
+        /**
 		 * onStartイベント
 		 */
-		public void OnStartEvent()
-		{
+        public void OnStartEvent()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnStartEvent:");
 #endif
-		}
+        }
 
-		/**
+        /**
 		 * onResumeイベント
 		 */
-		public void OnResumeEvent()
-		{
+        public void OnResumeEvent()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnResumeEvent:");
 #endif
-			LifecycleEvent?.Invoke(true);
-		}
+            LifecycleEvent?.Invoke(true);
+        }
 
-		/**
+        /**
 		 * onPauseイベント
 		 */
-		public void OnPauseEvent()
-		{
+        public void OnPauseEvent()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnPauseEvent:");
 #endif
-			LifecycleEvent?.Invoke(false);
-		}
+            LifecycleEvent?.Invoke(false);
+        }
 
-		/**
+        /**
 		 * onStopイベント
 		 */
-		public void OnStopEvent()
-		{
+        public void OnStopEvent()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnStopEvent:");
 #endif
-		}
+        }
 
-		/**
+        /**
 		 * パーミッションを取得できた
 		 */
-		public void OnPermissionGrant()
-		{
+        public void OnPermissionGrant()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnPermissionGrant:");
 #endif
-			grantResult = PermissionGrantResult.PERMISSION_GRANT;
-			isPermissionRequesting = false;
-		}
+            grantResult = PermissionGrantResult.PERMISSION_GRANT;
+            isPermissionRequesting = false;
+        }
 
-		/**
+        /**
 		 * パーミッションを取得できなかった
 		 */
-		public void OnPermissionDeny()
-		{
+        public void OnPermissionDeny()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnPermissionDeny:");
 #endif
-			grantResult = PermissionGrantResult.PERMISSION_DENY;
-			isPermissionRequesting = false;
-		}
+            grantResult = PermissionGrantResult.PERMISSION_DENY;
+            isPermissionRequesting = false;
+        }
 
-		/**
+        /**
 		 * パーミッションを取得できずパーミッションダイアログを再び表示しないように設定された
 		 */
-		public void OnPermissionDenyAndNeverAskAgain()
-		{
+        public void OnPermissionDenyAndNeverAskAgain()
+        {
 #if (!NDEBUG && DEBUG && ENABLE_LOG)
 			Console.WriteLine($"{TAG}OnPermissionDenyAndNeverAskAgain:");
 #endif
-			grantResult = PermissionGrantResult.PERMISSION_DENY_AND_NEVER_ASK_AGAIN;
-			isPermissionRequesting = false;
-		}
+            grantResult = PermissionGrantResult.PERMISSION_DENY_AND_NEVER_ASK_AGAIN;
+            isPermissionRequesting = false;
+        }
 
-		//--------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------
 #if UNITY_ANDROID
 		/**
 		 * プラグインの初期化実行
